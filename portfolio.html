@@ -1,0 +1,225 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #08141F;
+        color: white;
+        line-height: 1.6;
+    }
+
+    header {
+        background: Black;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    header h1 {
+        font-size: 28px;
+        color: #38bdf8;
+    }
+
+    header p {
+        color: #94a3b8;
+    }
+
+    section {
+        padding: 50px 10%;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #38bdf8;
+    }
+
+    .about {
+        font-size: 18px;
+    }
+
+    /* Gallery */
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .gallery img,
+    .gallery video {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* Resume */
+    .resume-container {
+        width: 100%;
+        height: 800px;
+        border: 2px solid #38bdf8;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        background: #020617;
+        margin-top: 40px;
+        color: #94a3b8;
+    }
+
+    .skills span {
+        display: inline-block;
+        background: #1e293b;
+        padding: 8px 15px;
+        margin: 5px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Sharmistha Mukhopadhyay</h1>
+    <p><I>Beginner in Aesthology  | Party/Bridal Makeup  |  Advance Hair touch  |  Basic Skin Treatment</I></p>
+</header>
+
+<section class="about">
+    <h2>About Me</h2>
+    <p>
+        I am a professionally trained Makeup, Hair and Skin Artist certified from <I>VLCC Institute, Jayanagar, Bangalore</I>, with specialized training in <U>advanced skin, hair, and beauty treatments</U>.
+<br>
+<br>
+<p>My training includes comprehensive expertise in:</p>
+<p>• Bridal and Party Makeup (HD & long-wear techniques)</p>
+<p>• Casual, weekend, and occasion-based makeup looks</p>
+<p>• Advanced skin care treatments and facial therapies</p>
+<p>• Hair styling for bridal, party, and special events</p>
+<p>• Hair coloring techniques including foilage and creative color applications</p>
+<br>
+<br>
+I have hands-on experience in bridal and party makeup, with a strong focus on creating customized looks based on skin type, face structure, and client preferences. My approach combines professional technique with attention to hygiene, product quality, and long-lasting results to ensure client satisfaction.I am passionate about enhancing natural beauty and delivering a personalized, comfortable experience for every client. 
+<br>
+<br>
+I am currently seeking opportunities where I can contribute my skills, grow professionally, and be part of a creative and client-focused beauty team.
+
+I would be glad to connect and discuss how I can add value to your organization.
+
+    </p>
+</section>
+
+<section>
+    <h2>Skills</h2>
+    <div class="skills">
+        <span>skin analysis</span>
+        <span>skin cleansing</span>
+        <span>skin exfoliation</span>
+        <span>skin massage</span>
+        <span>skin mask</span>
+        <span>skin hair removal - threading / waxing</span>
+        <span>long lasting makeup</span>
+        <span>party glam</span>
+        <span>bridal makeup</span>
+        <span>groom makeup</span>
+        <span>contour , highlighting & blending</span>
+        <span>face acne controls</span>
+        <span>face cleanups</span>
+        <span>Hair layering / step / bob / face framing</span>
+        <span>Hair rebonding</span>
+        <span>Hair colour</span>
+        <span>Hair damage repair</span>
+        
+        
+    </div>
+</section>
+
+<section>
+    <h2>Project Images</h2>
+    <div class="gallery" id="imageGallery"></div>
+</section>
+
+<section>
+    <h2>Project Videos</h2>
+    <div class="gallery" id="videoGallery"></div>
+</section>
+
+<section>
+    <h2>Resume</h2>
+    <div class="resume-container">
+        <!-- Resume visible automatically -->
+        <iframe src="resume.pdf"></iframe>
+    </div>
+</section>
+
+<footer>
+    <p><b>© 2026 Sharmistha Mukhopadhyay | Portfolio<b></p>
+</footer>
+
+<script>
+/*
+IMPORTANT:
+Place your files in GitHub repo like:
+
+images/
+    img1.jpg
+    img2.png
+videos/
+    video1.mp4
+    video2.mp4
+resume/
+    resume.pdf
+*/
+
+// List your image filenames here
+const imageFiles = [
+    "images/img1.jpg",
+    "images/img2.jpg",
+    "images/img3.png"
+];
+
+// List your video filenames here
+const videoFiles = [
+    "videos/video1.mp4",
+    "videos/video2.mp4"
+];
+
+// Load Images
+const imageGallery = document.getElementById("imageGallery");
+imageFiles.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    imageGallery.appendChild(img);
+});
+
+// Load Videos
+const videoGallery = document.getElementById("videoGallery");
+videoFiles.forEach(src => {
+    const video = document.createElement("video");
+    video.src = src;
+    video.controls = true;
+    videoGallery.appendChild(video);
+});
+</script>
+
+</body>
+</html>
