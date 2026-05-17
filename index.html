@@ -16,6 +16,12 @@
         background: #08141F;
         color: white;
         line-height: 1.6;
+
+        /* Disable text/media selection globally */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
     header {
@@ -56,11 +62,58 @@
         gap: 20px;
     }
 
-    .gallery img,
-    .gallery video {
-        width: 100%;
+    /* ===== PROTECTED MEDIA WRAPPER ===== */
+    .media-wrapper {
+        position: relative;
+        display: block;
         border-radius: 10px;
+        overflow: hidden;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .media-wrapper img,
+    .media-wrapper video {
+        width: 100%;
+        display: block;
+        border-radius: 10px;
+        /* Disable browser native drag */
+        -webkit-user-drag: none;
+        user-drag: none;
+        pointer-events: none; /* prevents right-click save on img */
+    }
+
+    /* Videos need pointer-events for controls — handled via overlay trick */
+    .media-wrapper video {
+        pointer-events: auto;
+    }
+
+    /* Transparent overlay blocks right-click save on images */
+    .media-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background: transparent;
+        /* Allows video controls to show through but blocks right-click */
+    }
+
+    /* For images, overlay sits on top fully */
+    .media-wrapper.is-image .media-overlay {
+        cursor: default;
+    }
+
+    /* For videos, overlay only covers top part so controls remain clickable */
+    .media-wrapper.is-video .media-overlay {
+        height: calc(100% - 40px); /* leave bottom ~40px for native controls */
+    }
+
+    /* ===== SCREENSHOT BLUR PROTECTION ===== */
+    body.screenshot-blur .media-wrapper img,
+    body.screenshot-blur .media-wrapper video {
+        filter: blur(20px) brightness(0.3);
+        transition: filter 0.1s;
     }
 
     /* Resume */
@@ -95,106 +148,114 @@
         font-size: 14px;
     }
 
-/* ===== POPUP STYLES ===== */
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none; /* hidden initially */
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
+    /* ===== POPUP STYLES ===== */
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
 
-.popup-content {
-    background: #0f172a;
-    padding: 25px;
-    border-radius: 12px;
-    text-align: center;
-    width: 90%;
-    max-width: 350px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.6);
-    position: relative;
-    animation: fadeIn 0.4s ease;
-}
+    .popup-content {
+        background: #0f172a;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        width: 90%;
+        max-width: 350px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        position: relative;
+        animation: fadeIn 0.4s ease;
+    }
 
-.popup-content h2 {
-    color: #38bdf8;
-    margin-bottom: 10px;
-}
+    .popup-content h2 {
+        color: #38bdf8;
+        margin-bottom: 10px;
+    }
 
-.popup-content p {
-    font-size: 14px;
-    color: #cbd5f5;
-}
+    .popup-content p {
+        font-size: 14px;
+        color: #cbd5f5;
+    }
 
-.popup-content .highlight {
-    color: #facc15;
-    font-weight: bold;
-}
+    .popup-content .highlight {
+        color: #facc15;
+        font-weight: bold;
+    }
 
-.popup-content button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: #38bdf8;
-    border: none;
-    border-radius: 6px;
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-}
+    .popup-content button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #38bdf8;
+        border: none;
+        border-radius: 6px;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
-.popup-content button:hover {
-    background: #0ea5e9;
-}
+    .popup-content button:hover {
+        background: #0ea5e9;
+    }
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 22px;
-    cursor: pointer;
-    color: #fff;
-}
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 22px;
+        cursor: pointer;
+        color: #fff;
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+    }
 
+    /* ===== WATERMARK ON MEDIA ===== */
+    .media-wrapper::after {
+        content: "© Sharmistha Mukhopadhyay";
+        position: absolute;
+        bottom: 8px;
+        right: 10px;
+        font-size: 11px;
+        color: rgba(255,255,255,0.45);
+        pointer-events: none;
+        z-index: 20;
+        letter-spacing: 0.5px;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
 </style>
 </head>
 <body>
 
 <header>
     <h1>Sharmistha Mukhopadhyay</h1>
-    <p><I>Beginner in Aesthology  | Party/Bridal Makeup  |  Advance Hair touch  |  Basic Skin Treatment</I></p>
+    <p><i>Beginner in Aesthology  | Party/Bridal Makeup  |  Advance Hair touch  |  Basic Skin Treatment</i></p>
 </header>
 
 <section class="about">
     <h2>About Me</h2>
     <p>
-        I am a professionally trained Makeup, Hair and Skin Artist certified from <I>VLCC Institute, Jayanagar, Bangalore</I>, with specialized training in <U>advanced skin, hair, and beauty treatments</U>.
-<br>
-<br>
-<p>My training includes comprehensive expertise in:</p>
-<p>• Bridal and Party Makeup (HD & long-wear techniques)</p>
-<p>• Casual, weekend, and occasion-based makeup looks</p>
-<p>• Advanced skin care treatments and facial therapies</p>
-<p>• Hair styling for bridal, party, and special events</p>
-<p>• Hair coloring techniques including foilage and creative color applications</p>
-<br>
-<br>
-I have hands-on experience in bridal and party makeup, with a strong focus on creating customized looks based on skin type, face structure, and client preferences. My approach combines professional technique with attention to hygiene, product quality, and long-lasting results to ensure client satisfaction.I am passionate about enhancing natural beauty and delivering a personalized, comfortable experience for every client. 
-<br>
-<br>
-I am currently seeking opportunities where I can contribute my skills, grow professionally, and be part of a creative and client-focused beauty team.
-
-I would be glad to connect and discuss how I can add value to your organization.
-
+        I am a professionally trained Makeup, Hair and Skin Artist certified from <i>VLCC Institute, Jayanagar, Bangalore</i>, with specialized training in <u>advanced skin, hair, and beauty treatments</u>.
+        <br><br>
+        <p>My training includes comprehensive expertise in:</p>
+        <p>• Bridal and Party Makeup (HD & long-wear techniques)</p>
+        <p>• Casual, weekend, and occasion-based makeup looks</p>
+        <p>• Advanced skin care treatments and facial therapies</p>
+        <p>• Hair styling for bridal, party, and special events</p>
+        <p>• Hair coloring techniques including foilage and creative color applications</p>
+        <br><br>
+        I have hands-on experience in bridal and party makeup, with a strong focus on creating customized looks based on skin type, face structure, and client preferences. My approach combines professional technique with attention to hygiene, product quality, and long-lasting results to ensure client satisfaction. I am passionate about enhancing natural beauty and delivering a personalized, comfortable experience for every client.
+        <br><br>
+        I am currently seeking opportunities where I can contribute my skills, grow professionally, and be part of a creative and client-focused beauty team.
+        I would be glad to connect and discuss how I can add value to your organization.
     </p>
 </section>
 
@@ -218,52 +279,44 @@ I would be glad to connect and discuss how I can add value to your organization.
         <span>Hair rebonding</span>
         <span>Hair colour</span>
         <span>Hair damage repair</span>
-        
-        
     </div>
 </section>
+
 <section>
-   <h2>Languages</h2>
-   <p> HINDI , ENGLISH , BENGALI </p>
+    <h2>Languages</h2>
+    <p>HINDI , ENGLISH , BENGALI</p>
 </section>
 
-<section><h2>Exerience</h2>
-<p>
-<u>Bridal & Event Makeup:</u>
-<br>
-<br>
-<p>* Specialized in bridal makeup and complete wedding styling.</p>
-<p>* Provided makeup services for wedding invitees and family members.</p>
-<p>* Expertise in creating day look, evening look, and night party makeup.</p>
-<p>* Experience in party makeup for social events, receptions, and celebrations.</p>
-<p>* Skilled in kids’ fashion show and stage makeup.</p>
-<br>
-<br>
-<u>Saree Draping & Traditional Styling:</u>
-<br>
-<br>
-<p>* Expert in Bengali bridal saree draping.</p>
-<p>* Proficient in all types of saree draping styles including traditional, modern, and regional drapes.</p>
-<p>* Experience in complete traditional bridal preparation and finishing.</p>
-<br>
-<br>
-<u>Hair Styling & Hair Treatments:</u>
-<br>
-<br>
-<p>* Professional bridal and party hair styling.</p>
-<p>* Services include hair cutting, hair coloring, and styling.</p>
-<p>* Experienced in hair rebonding and smoothing treatments.</p>
-<br>
-<br>
-<u>Salon Services:</u>
-<br>
-<br>
-<p>* Waxing (full body and specialized areas)</p>
-<p>* Threading (eyebrows, upper lip, facial)</p>
-<p>* Manicure and Pedicure for hand and foot care</p>
-<br>
-<br>
-</p>
+<section>
+    <h2>Experience</h2>
+    <p>
+        <u>Bridal & Event Makeup:</u>
+        <br><br>
+        <p>* Specialized in bridal makeup and complete wedding styling.</p>
+        <p>* Provided makeup services for wedding invitees and family members.</p>
+        <p>* Expertise in creating day look, evening look, and night party makeup.</p>
+        <p>* Experience in party makeup for social events, receptions, and celebrations.</p>
+        <p>* Skilled in kids' fashion show and stage makeup.</p>
+        <br><br>
+        <u>Saree Draping & Traditional Styling:</u>
+        <br><br>
+        <p>* Expert in Bengali bridal saree draping.</p>
+        <p>* Proficient in all types of saree draping styles including traditional, modern, and regional drapes.</p>
+        <p>* Experience in complete traditional bridal preparation and finishing.</p>
+        <br><br>
+        <u>Hair Styling & Hair Treatments:</u>
+        <br><br>
+        <p>* Professional bridal and party hair styling.</p>
+        <p>* Services include hair cutting, hair coloring, and styling.</p>
+        <p>* Experienced in hair rebonding and smoothing treatments.</p>
+        <br><br>
+        <u>Salon Services:</u>
+        <br><br>
+        <p>* Waxing (full body and specialized areas)</p>
+        <p>* Threading (eyebrows, upper lip, facial)</p>
+        <p>* Manicure and Pedicure for hand and foot care</p>
+        <br><br>
+    </p>
 </section>
 
 <section>
@@ -279,82 +332,191 @@ I would be glad to connect and discuss how I can add value to your organization.
 <section>
     <h2>Resume</h2>
     <div class="resume-container">
-        <!-- Resume visible automatically -->
         <iframe src="resume.pdf"></iframe>
     </div>
 </section>
 
 <footer>
-    <p><b>© 2026 Sharmistha Mukhopadhyay | Portfolio | Enquire Now<b></p>
+    <p><b>© 2026 Sharmistha Mukhopadhyay | Portfolio | Enquire Now</b></p>
 </footer>
-
-<script>
-
-
-// List your image filenames here
-const imageFiles = [
-    "IMG-20260207-WA0037.jpg",
-    "IMG-20260207-WA0039.jpg",
-    "IMG-20260207-WA0046.jpg" , "IMG-20260207-WA0047.jpg", "IMG-20260207-WA0048.jpg", "IMG-20260207-WA0049.jpg", "IMG-20260207-WA0050.jpg", "IMG-20260207-WA0051.jpg", "IMG-20260207-WA0052.jpg", "IMG-20260207-WA0053.jpg", "IMG-20260207-WA0056.jpg", "IMG-20260207-WA0061.jpg", "IMG-20260207-WA0066.jpg", "IMG-20260207-WA0067.jpg","IMG-20260207-WA0068.jpg", "IMG-20260207-WA0069.jpg", "IMG-20260207-WA0071.jpg"
-];
-
-// List your video filenames here
-const videoFiles = [
-    "VID-20260207-WA0054.mp4",
-    "VID-20260207-WA0060.mp4", "VID-20260207-WA0062.mp4", "VID-20260207-WA0064.mp4", "VID-20260207-WA0065.mp4", "VID-20260207-WA0070.mp4"
-];
-
-// Load Images
-const imageGallery = document.getElementById("imageGallery");
-imageFiles.forEach(src => {
-    const img = document.createElement("img");
-    img.src = src;
-    imageGallery.appendChild(img);
-});
-
-// Load Videos
-const videoGallery = document.getElementById("videoGallery");
-videoFiles.forEach(src => {
-    const video = document.createElement("video");
-    video.src = src;
-    video.controls = true;
-    videoGallery.appendChild(video);
-});
-
-
-// ===== POPUP SCRIPT =====
-
-// show popup after 2 seconds (better UX)
-setTimeout(() => {
-    document.getElementById("adPopup").style.display = "flex";
-}, 2000);
-
-// close popup
-function closePopup() {
-    document.getElementById("adPopup").style.display = "none";
-}
-
-</script>
 
 <!-- ===== POPUP ===== -->
 <div id="adPopup" class="popup">
     <div class="popup-content">
         <span class="close-btn" onclick="closePopup()">&times;</span>
-
         <h2>✨ Shine at Your Next Event!</h2>
         <p>
             Makeup & styling for weddings, parties, and shoots.
             <br><br>
             <b>Limited slots available!</b>
             <br>
-            Get <span class="highlight">10% OFF</span> on your first booking.
+            Get <span class="highlight">30% OFF</span> Lowest ever on your first booking.
         </p>
-
         <button onclick="window.open('https://wa.me/9836462061', '_blank')">
             Check Availability
         </button>
     </div>
 </div>
 
+<script>
+
+// ============================================================
+//  MEDIA FILE LISTS
+// ============================================================
+const imageFiles = [
+    "IMG-20260207-WA0037.jpg",
+    "IMG-20260207-WA0039.jpg",
+    "IMG-20260207-WA0046.jpg",
+    "IMG-20260207-WA0047.jpg",
+    "IMG-20260207-WA0048.jpg",
+    "IMG-20260207-WA0049.jpg",
+    "IMG-20260207-WA0050.jpg",
+    "IMG-20260207-WA0051.jpg",
+    "IMG-20260207-WA0052.jpg",
+    "IMG-20260207-WA0053.jpg",
+    "IMG-20260207-WA0056.jpg",
+    "IMG-20260207-WA0061.jpg",
+    "IMG-20260207-WA0066.jpg",
+    "IMG-20260207-WA0067.jpg",
+    "IMG-20260207-WA0068.jpg",
+    "IMG-20260207-WA0069.jpg",
+    "IMG-20260207-WA0071.jpg"
+];
+
+const videoFiles = [
+    "VID-20260207-WA0054.mp4",
+    "VID-20260207-WA0060.mp4",
+    "VID-20260207-WA0062.mp4",
+    "VID-20260207-WA0064.mp4",
+    "VID-20260207-WA0065.mp4",
+    "VID-20260207-WA0070.mp4"
+];
+
+// ============================================================
+//  BUILD PROTECTED IMAGE GALLERY
+// ============================================================
+const imageGallery = document.getElementById("imageGallery");
+imageFiles.forEach(src => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "media-wrapper is-image";
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Portfolio image";
+    img.draggable = false;  // disable drag-to-save
+
+    // Transparent overlay blocks right-click context menu on image
+    const overlay = document.createElement("div");
+    overlay.className = "media-overlay";
+
+    // Block right-click on overlay
+    overlay.addEventListener("contextmenu", e => e.preventDefault());
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(overlay);
+    imageGallery.appendChild(wrapper);
+});
+
+// ============================================================
+//  BUILD PROTECTED VIDEO GALLERY
+// ============================================================
+const videoGallery = document.getElementById("videoGallery");
+videoFiles.forEach(src => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "media-wrapper is-video";
+
+    const video = document.createElement("video");
+    video.src = src;
+    video.controls = true;
+    video.controlsList = "nodownload nofullscreen";   // remove download button
+    video.disablePictureInPicture = true;             // disable PiP
+    video.setAttribute("oncontextmenu", "return false;"); // no right-click
+
+    // Overlay only covers non-controls area (see CSS)
+    const overlay = document.createElement("div");
+    overlay.className = "media-overlay";
+    overlay.addEventListener("contextmenu", e => e.preventDefault());
+
+    wrapper.appendChild(video);
+    wrapper.appendChild(overlay);
+    videoGallery.appendChild(wrapper);
+});
+
+// ============================================================
+//  GLOBAL RIGHT-CLICK BLOCK
+// ============================================================
+document.addEventListener("contextmenu", e => {
+    // Block right-click everywhere on the page
+    e.preventDefault();
+    return false;
+});
+
+// ============================================================
+//  KEYBOARD SHORTCUT BLOCKING
+// ============================================================
+document.addEventListener("keydown", e => {
+    const key = e.key;
+    const ctrl = e.ctrlKey || e.metaKey;
+
+    // Block: PrintScreen
+    if (key === "PrintScreen") {
+        e.preventDefault();
+        navigator.clipboard?.writeText(""); // clear clipboard immediately
+        return false;
+    }
+
+    // Block: Ctrl/Cmd + S (save), Ctrl+U (view source),
+    //         Ctrl+Shift+I / F12 (DevTools), Ctrl+P (print/screenshot)
+    //         Ctrl+Shift+J (console), Ctrl+A (select all)
+    if (
+        ctrl && ["s", "S", "u", "U", "p", "P", "a", "A"].includes(key)
+    ) {
+        e.preventDefault();
+        return false;
+    }
+
+    if (
+        (ctrl && e.shiftKey && ["i", "I", "j", "J", "c", "C"].includes(key)) ||
+        key === "F12"
+    ) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// ============================================================
+//  DRAG BLOCK ON ALL IMAGES GLOBALLY
+// ============================================================
+document.addEventListener("dragstart", e => {
+    if (e.target.tagName === "IMG" || e.target.tagName === "VIDEO") {
+        e.preventDefault();
+    }
+});
+
+// ============================================================
+//  SCREENSHOT DETECTION (Page Visibility API)
+//  When user Alt+Tabs or the screen is captured on some devices,
+//  the page becomes "hidden" — we blur media while hidden.
+// ============================================================
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.classList.add("screenshot-blur");
+    } else {
+        document.body.classList.remove("screenshot-blur");
+    }
+});
+
+// ============================================================
+//  POPUP
+// ============================================================
+setTimeout(() => {
+    document.getElementById("adPopup").style.display = "flex";
+}, 2000);
+
+function closePopup() {
+    document.getElementById("adPopup").style.display = "none";
+}
+
+</script>
 </body>
 </html>
