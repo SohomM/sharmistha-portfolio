@@ -1,522 +1,669 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
+<title>Sharmistha Mukhopadhyay — Beauty Artist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-    }
+:root {
+  --black:       #080608;
+  --deep:        #100d10;
+  --rose-gold:   #c9956c;
+  --champagne:   #e8d5b7;
+  --blush:       #f0c4c4;
+  --ivory:       #faf5ef;
+  --muted:       #8a7a6e;
+  --glass:       rgba(201,149,108,0.08);
+  --glass-border:rgba(201,149,108,0.22);
+}
 
-    body {
-        background: #08141F;
-        color: white;
-        line-height: 1.6;
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
 
-        /* Disable text/media selection globally */
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
+html { scroll-behavior: smooth; }
 
-    header {
-        background: Black;
-        padding: 20px;
-        text-align: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
+body {
+  background: var(--black);
+  color: var(--champagne);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-    header h1 {
-        font-size: 28px;
-        color: #38bdf8;
-    }
+/* ── CUSTOM CURSOR ─────────────────────────────── */
+#cursor-dot {
+  position: fixed; top:0; left:0;
+  width: 8px; height: 8px;
+  background: var(--rose-gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%,-50%);
+}
+#cursor-ring {
+  position: fixed; top:0; left:0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(201,149,108,.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, border-color .2s;
+}
 
-    header p {
-        color: #94a3b8;
-    }
+/* ── PARTICLES CANVAS ──────────────────────────── */
+#particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
 
-    section {
-        padding: 50px 10%;
-    }
+/* ── NAV ───────────────────────────────────────── */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 6%;
+  background: linear-gradient(to bottom, rgba(8,6,8,.92) 0%, transparent 100%);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem; font-weight: 300;
+  letter-spacing: .25em; color: var(--champagne);
+  text-transform: uppercase;
+}
+.nav-logo span { color: var(--rose-gold); }
+.nav-links { display:flex; gap:2.5rem; }
+.nav-links a {
+  font-size: .7rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; transition: color .3s; cursor: none;
+}
+.nav-links a:hover { color: var(--rose-gold); }
 
-    h2 {
-        margin-bottom: 20px;
-        color: #38bdf8;
-    }
+/* ── HERO ──────────────────────────────────────── */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; z-index: 1; padding: 0 5%;
+}
+.hero-eyebrow {
+  font-size: .65rem; letter-spacing: .45em;
+  text-transform: uppercase; color: var(--rose-gold);
+  margin-bottom: 2rem; opacity:0;
+  animation: fadeUp .9s .3s forwards;
+}
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 9vw, 8.5rem);
+  font-weight: 300; line-height: 1;
+  color: var(--ivory); letter-spacing: -.01em;
+  opacity:0; animation: fadeUp 1s .6s forwards;
+}
+.hero-name em { font-style: italic; color: var(--rose-gold); }
+.hero-divider {
+  width: 60px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--rose-gold), transparent);
+  margin: 2rem auto; opacity:0; animation: fadeIn 1s 1s forwards;
+}
+.hero-tagline {
+  font-size: clamp(.75rem,2vw,.95rem);
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted); opacity:0; animation: fadeUp .9s 1.2s forwards;
+}
+.hero-cta {
+  margin-top: 3rem;
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  opacity:0; animation: fadeUp .9s 1.5s forwards;
+}
+.btn {
+  padding: 14px 38px; background: transparent;
+  border: 1px solid var(--rose-gold); color: var(--rose-gold);
+  font-family: 'Jost', sans-serif; font-size: .7rem;
+  letter-spacing: .25em; text-transform: uppercase;
+  cursor: none; text-decoration: none; transition: background .3s, color .3s;
+}
+.btn:hover { background: var(--rose-gold); color: var(--black); }
+.btn-ghost { border-color: var(--muted); color: var(--muted); }
+.btn-ghost:hover { background: var(--muted); color: var(--black); }
 
-    .about {
-        font-size: 18px;
-    }
+.scroll-hint {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap:.5rem;
+  opacity:0; animation: fadeIn 1s 2s forwards;
+}
+.scroll-hint span { font-size:.55rem; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
+.scroll-line {
+  width:1px; height:50px;
+  background: linear-gradient(to bottom, var(--rose-gold), transparent);
+  animation: scrollPulse 2s infinite;
+}
+@keyframes scrollPulse { 0%,100%{opacity:.3;} 50%{opacity:1;} }
 
-    /* Gallery */
-    .gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
+/* ── SECTION ───────────────────────────────────── */
+.section { position:relative; z-index:1; padding:7rem 0; }
+.section-inner { padding:0 8%; }
+.section-label {
+  font-size:.6rem; letter-spacing:.45em;
+  text-transform:uppercase; color:var(--rose-gold); margin-bottom:.75rem;
+}
+.section-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,5vw,3.8rem); font-weight:300;
+  color:var(--ivory); line-height:1.1; margin-bottom:2.5rem;
+}
+.section-title em { font-style:italic; color:var(--rose-gold); }
+.thin-divider {
+  width:100%; height:1px;
+  background:linear-gradient(to right, transparent 0%, var(--glass-border) 30%, var(--glass-border) 70%, transparent 100%);
+  margin:0;
+}
 
-    /* ===== PROTECTED MEDIA WRAPPER ===== */
-    .media-wrapper {
-        position: relative;
-        display: block;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
+/* ── ABOUT ─────────────────────────────────────── */
+.about-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:5rem; align-items:start;
+}
+.about-text p {
+  font-size:.95rem; line-height:2;
+  color:var(--muted); margin-bottom:1rem;
+}
+.about-text p strong { color:var(--champagne); font-weight:400; }
+.about-stats { display:flex; flex-direction:column; gap:2rem; padding-top:1rem; }
+.stat-item { border-left:1px solid var(--glass-border); padding-left:1.5rem; }
+.stat-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem; font-weight:300; color:var(--rose-gold); line-height:1;
+}
+.stat-label { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-top:.3rem; }
+.skills-cloud { display:flex; flex-wrap:wrap; gap:.75rem; margin-top:2rem; }
+.skill-pill {
+  padding:8px 20px;
+  border:1px solid var(--glass-border);
+  background:var(--glass); color:var(--champagne);
+  font-size:.7rem; letter-spacing:.12em; text-transform:uppercase;
+  transition:background .3s, border-color .3s, color .3s;
+}
+.skill-pill:hover { background:rgba(201,149,108,.18); border-color:var(--rose-gold); color:var(--ivory); }
 
-    .media-wrapper img,
-    .media-wrapper video {
-        width: 100%;
-        display: block;
-        border-radius: 10px;
-        /* Disable browser native drag */
-        -webkit-user-drag: none;
-        user-drag: none;
-        pointer-events: none; /* prevents right-click save on img */
-    }
+/* ── IMAGE STRIPS ──────────────────────────────── */
+.strip-section { overflow:hidden; padding:4rem 0; }
+.strip-label { text-align:center; margin-bottom:3rem; padding:0 8%; }
+.strip-track-wrapper {
+  overflow:hidden;
+  mask-image:linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+.strip-track {
+  display:flex; gap:16px; width:max-content;
+  animation:stripScroll 45s linear infinite;
+}
+.strip-track:hover { animation-play-state:paused; }
+.strip-track.reverse { animation-direction:reverse; margin-top:16px; }
+@keyframes stripScroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
 
-    /* Videos need pointer-events for controls — handled via overlay trick */
-    .media-wrapper video {
-        pointer-events: auto;
-    }
+.strip-card {
+  position:relative; width:280px; height:360px;
+  flex-shrink:0; overflow:hidden; border-radius:2px;
+}
+.strip-card::after {
+  content:"© Sharmistha"; position:absolute;
+  bottom:8px; right:10px; font-size:10px;
+  color:rgba(255,255,255,.3); pointer-events:none;
+  z-index:20; font-family:'Jost',sans-serif; letter-spacing:.05em;
+}
+.strip-card img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  -webkit-user-drag:none; pointer-events:none;
+  transition:transform .6s ease, filter .6s ease;
+  filter:brightness(.82) saturate(.9);
+}
+.strip-card:hover img { transform:scale(1.07); filter:brightness(1) saturate(1.1); }
+.strip-card .card-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top,rgba(8,6,8,.55) 0%, transparent 60%);
+  z-index:5; pointer-events:none;
+}
 
-    /* Transparent overlay blocks right-click save on images */
-    .media-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-        background: transparent;
-        /* Allows video controls to show through but blocks right-click */
-    }
+/* ── VIDEO CAROUSEL ────────────────────────────── */
+.video-carousel { position:relative; width:100%; max-width:860px; margin:0 auto; }
+.video-stage {
+  position:relative; width:100%; aspect-ratio:16/9;
+  background:#000; border-radius:2px; overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+}
+.video-slide { position:absolute; inset:0; opacity:0; transition:opacity .8s ease; pointer-events:none; }
+.video-slide.active { opacity:1; pointer-events:auto; }
+.video-slide video { width:100%; height:100%; object-fit:cover; display:block; }
+.vid-top-overlay { position:absolute; top:0; left:0; right:0; height:calc(100% - 44px); z-index:10; background:transparent; }
+.video-nav { display:flex; justify-content:center; align-items:center; gap:1rem; margin-top:2rem; }
+.vid-dot { width:32px; height:2px; background:var(--glass-border); cursor:none; transition:background .3s, width .3s; }
+.vid-dot.active { background:var(--rose-gold); width:56px; }
+.vid-arrow {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(8,6,8,.6); border:1px solid var(--glass-border);
+  color:var(--champagne); width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:none; transition:background .3s, border-color .3s;
+  z-index:20; font-size:1.1rem;
+}
+.vid-arrow:hover { background:rgba(201,149,108,.2); border-color:var(--rose-gold); }
+.vid-arrow.prev { left:-22px; }
+.vid-arrow.next { right:-22px; }
 
-    /* For images, overlay sits on top fully */
-    .media-wrapper.is-image .media-overlay {
-        cursor: default;
-    }
+/* ── EXPERIENCE ────────────────────────────────── */
+.exp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5px; margin-top:3rem; }
+.exp-card {
+  background:var(--glass); border:1px solid var(--glass-border);
+  padding:2.5rem 2rem; transition:background .3s, border-color .3s;
+}
+.exp-card:hover { background:rgba(201,149,108,.12); border-color:rgba(201,149,108,.4); }
+.exp-icon { font-size:1.6rem; margin-bottom:1rem; }
+.exp-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--ivory); margin-bottom:1rem; }
+.exp-list { list-style:none; }
+.exp-list li { font-size:.8rem; line-height:1.9; color:var(--muted); padding-left:1rem; position:relative; }
+.exp-list li::before { content:'—'; position:absolute; left:0; color:var(--rose-gold); }
 
-    /* For videos, overlay only covers top part so controls remain clickable */
-    .media-wrapper.is-video .media-overlay {
-        height: calc(100% - 40px); /* leave bottom ~40px for native controls */
-    }
+/* ── RESUME ────────────────────────────────────── */
+.resume-wrap { border:1px solid var(--glass-border); overflow:hidden; border-radius:2px; }
+.resume-wrap iframe { width:100%; height:780px; border:none; display:block; }
 
-    /* ===== SCREENSHOT BLUR PROTECTION ===== */
-    body.screenshot-blur .media-wrapper img,
-    body.screenshot-blur .media-wrapper video {
-        filter: blur(20px) brightness(0.3);
-        transition: filter 0.1s;
-    }
+/* ── FOOTER ────────────────────────────────────── */
+footer {
+  position:relative; z-index:1;
+  background:var(--deep); border-top:1px solid var(--glass-border);
+  padding:4rem 8%; display:flex;
+  justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem;
+}
+.footer-logo { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--ivory); letter-spacing:.1em; }
+.footer-logo span { color:var(--rose-gold); }
+.footer-info { font-size:.7rem; letter-spacing:.12em; color:var(--muted); line-height:2; }
+.footer-wa {
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:12px 28px; border:1px solid var(--rose-gold);
+  color:var(--rose-gold); text-decoration:none;
+  font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
+  transition:background .3s,color .3s; cursor:none;
+}
+.footer-wa:hover { background:var(--rose-gold); color:var(--black); }
 
-    /* Resume */
-    .resume-container {
-        width: 100%;
-        height: 800px;
-        border: 2px solid #38bdf8;
-        border-radius: 10px;
-        overflow: hidden;
-    }
+/* ── POPUP ─────────────────────────────────────── */
+.popup-bg {
+  position:fixed; inset:0; background:rgba(8,6,8,.82);
+  backdrop-filter:blur(6px); display:none;
+  justify-content:center; align-items:center; z-index:5000;
+}
+.popup-box {
+  background:var(--deep); border:1px solid var(--glass-border);
+  padding:3rem 2.5rem; width:min(90vw,400px);
+  text-align:center; position:relative;
+  animation:popIn .5s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes popIn { from{opacity:0;transform:scale(.88) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
+.popup-close { position:absolute; top:14px; right:18px; font-size:1.3rem; color:var(--muted); cursor:none; transition:color .2s; }
+.popup-close:hover { color:var(--ivory); }
+.popup-eyebrow { font-size:.6rem; letter-spacing:.4em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:1rem; }
+.popup-title { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--ivory); line-height:1.2; margin-bottom:1rem; }
+.popup-body { font-size:.82rem; line-height:1.9; color:var(--muted); }
+.popup-discount { font-family:'Cormorant Garamond',serif; font-size:3.5rem; font-weight:300; color:var(--rose-gold); line-height:1; margin:1rem 0; }
+.popup-discount small { font-size:1rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); display:block; margin-top:.3rem; }
+.popup-btn {
+  display:inline-block; margin-top:1.5rem;
+  padding:14px 36px; background:var(--rose-gold); color:var(--black);
+  font-family:'Jost',sans-serif; font-size:.7rem; letter-spacing:.2em;
+  text-transform:uppercase; text-decoration:none; cursor:none;
+  transition:background .3s; border:none;
+}
+.popup-btn:hover { background:var(--champagne); }
 
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-    }
+/* ── ANIMATIONS ────────────────────────────────── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 
-    footer {
-        text-align: center;
-        padding: 20px;
-        background: #020617;
-        margin-top: 40px;
-        color: #94a3b8;
-    }
+/* ── SCROLL REVEAL ─────────────────────────────── */
+.reveal { opacity:0; transform:translateY(40px); transition:opacity .9s ease,transform .9s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
 
-    .skills span {
-        display: inline-block;
-        background: #1e293b;
-        padding: 8px 15px;
-        margin: 5px;
-        border-radius: 20px;
-        font-size: 14px;
-    }
-
-    /* ===== POPUP STYLES ===== */
-    .popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-    }
-
-    .popup-content {
-        background: #0f172a;
-        padding: 25px;
-        border-radius: 12px;
-        text-align: center;
-        width: 90%;
-        max-width: 350px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.6);
-        position: relative;
-        animation: fadeIn 0.4s ease;
-    }
-
-    .popup-content h2 {
-        color: #38bdf8;
-        margin-bottom: 10px;
-    }
-
-    .popup-content p {
-        font-size: 14px;
-        color: #cbd5f5;
-    }
-
-    .popup-content .highlight {
-        color: #facc15;
-        font-weight: bold;
-    }
-
-    .popup-content button {
-        margin-top: 15px;
-        padding: 10px 20px;
-        background: #38bdf8;
-        border: none;
-        border-radius: 6px;
-        color: black;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .popup-content button:hover {
-        background: #0ea5e9;
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 22px;
-        cursor: pointer;
-        color: #fff;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.8); }
-        to { opacity: 1; transform: scale(1); }
-    }
-
-    /* ===== WATERMARK ON MEDIA ===== */
-    .media-wrapper::after {
-        content: "© Sharmistha Mukhopadhyay";
-        position: absolute;
-        bottom: 8px;
-        right: 10px;
-        font-size: 11px;
-        color: rgba(255,255,255,0.45);
-        pointer-events: none;
-        z-index: 20;
-        letter-spacing: 0.5px;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
+/* ── RESPONSIVE ────────────────────────────────── */
+@media(max-width:768px){
+  .about-grid{grid-template-columns:1fr;gap:3rem;}
+  .vid-arrow{display:none;}
+  .nav-links{display:none;}
+  .hero-name{font-size:clamp(2.8rem,12vw,5rem);}
+}
 </style>
 </head>
 <body>
 
-<header>
-    <h1>Sharmistha Mukhopadhyay</h1>
-    <p><i>Beginner in Aesthology  | Party/Bridal Makeup  |  Advance Hair touch  |  Basic Skin Treatment</i></p>
-</header>
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<canvas id="particles"></canvas>
 
-<section class="about">
-    <h2>About Me</h2>
-    <p>
-        I am a professionally trained Makeup, Hair and Skin Artist certified from <i>VLCC Institute, Jayanagar, Bangalore</i>, with specialized training in <u>advanced skin, hair, and beauty treatments</u>.
-        <br><br>
-        <p>My training includes comprehensive expertise in:</p>
-        <p>• Bridal and Party Makeup (HD & long-wear techniques)</p>
-        <p>• Casual, weekend, and occasion-based makeup looks</p>
-        <p>• Advanced skin care treatments and facial therapies</p>
-        <p>• Hair styling for bridal, party, and special events</p>
-        <p>• Hair coloring techniques including foilage and creative color applications</p>
-        <br><br>
-        I have hands-on experience in bridal and party makeup, with a strong focus on creating customized looks based on skin type, face structure, and client preferences. My approach combines professional technique with attention to hygiene, product quality, and long-lasting results to ensure client satisfaction. I am passionate about enhancing natural beauty and delivering a personalized, comfortable experience for every client.
-        <br><br>
-        I am currently seeking opportunities where I can contribute my skills, grow professionally, and be part of a creative and client-focused beauty team.
-        I would be glad to connect and discuss how I can add value to your organization.
-    </p>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">S<span>.</span>M</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#videos">Films</a>
+    <a href="#experience">Experience</a>
+    <a href="#resume">Résumé</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Beauty Artist &nbsp;·&nbsp; Certified VLCC &nbsp;·&nbsp; Bangalore</div>
+  <h1 class="hero-name">Sharmi<em>stha</em><br>Mukho<em>padhyay</em></h1>
+  <div class="hero-divider"></div>
+  <p class="hero-tagline">Bridal &nbsp;·&nbsp; Party &nbsp;·&nbsp; Hair &nbsp;·&nbsp; Skin &nbsp;·&nbsp; Saree Draping</p>
+  <div class="hero-cta">
+    <a href="https://wa.me/9836462061" target="_blank" class="btn">Book a Session</a>
+    <a href="#gallery" class="btn btn-ghost">View Work</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
 </section>
 
-<section>
-    <h2>Skills</h2>
-    <div class="skills">
-        <span>skin analysis</span>
-        <span>skin cleansing</span>
-        <span>skin exfoliation</span>
-        <span>skin massage</span>
-        <span>skin mask</span>
-        <span>skin hair removal - threading / waxing</span>
-        <span>long lasting makeup</span>
-        <span>party glam</span>
-        <span>bridal makeup</span>
-        <span>groom makeup</span>
-        <span>contour , highlighting & blending</span>
-        <span>face acne controls</span>
-        <span>face cleanups</span>
-        <span>Hair layering / step / bob / face framing</span>
-        <span>Hair rebonding</span>
-        <span>Hair colour</span>
-        <span>Hair damage repair</span>
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">01 — About</p>
+      <h2 class="section-title">Where <em>artistry</em><br>meets the face</h2>
     </div>
-</section>
-
-<section>
-    <h2>Languages</h2>
-    <p>HINDI , ENGLISH , BENGALI</p>
-</section>
-
-<section>
-    <h2>Experience</h2>
-    <p>
-        <u>Bridal & Event Makeup:</u>
-        <br><br>
-        <p>* Specialized in bridal makeup and complete wedding styling.</p>
-        <p>* Provided makeup services for wedding invitees and family members.</p>
-        <p>* Expertise in creating day look, evening look, and night party makeup.</p>
-        <p>* Experience in party makeup for social events, receptions, and celebrations.</p>
-        <p>* Skilled in kids' fashion show and stage makeup.</p>
-        <br><br>
-        <u>Saree Draping & Traditional Styling:</u>
-        <br><br>
-        <p>* Expert in Bengali bridal saree draping.</p>
-        <p>* Proficient in all types of saree draping styles including traditional, modern, and regional drapes.</p>
-        <p>* Experience in complete traditional bridal preparation and finishing.</p>
-        <br><br>
-        <u>Hair Styling & Hair Treatments:</u>
-        <br><br>
-        <p>* Professional bridal and party hair styling.</p>
-        <p>* Services include hair cutting, hair coloring, and styling.</p>
-        <p>* Experienced in hair rebonding and smoothing treatments.</p>
-        <br><br>
-        <u>Salon Services:</u>
-        <br><br>
-        <p>* Waxing (full body and specialized areas)</p>
-        <p>* Threading (eyebrows, upper lip, facial)</p>
-        <p>* Manicure and Pedicure for hand and foot care</p>
-        <br><br>
-    </p>
-</section>
-
-<section>
-    <h2>Project Images</h2>
-    <div class="gallery" id="imageGallery"></div>
-</section>
-
-<section>
-    <h2>Project Videos</h2>
-    <div class="gallery" id="videoGallery"></div>
-</section>
-
-<section>
-    <h2>Resume</h2>
-    <div class="resume-container">
-        <iframe src="resume.pdf"></iframe>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>Professionally trained at <strong>VLCC Institute, Jayanagar, Bangalore</strong>, I specialize in translating each client's unique beauty into a curated look — whether it's an intimate mehendi morning or a grand bridal evening.</p>
+        <p>My practice spans <strong>HD & long-wear bridal makeup</strong>, advanced skin therapies, creative hair color, and immaculate saree draping. Every look is built around face structure, skin tone, and the story you want to tell.</p>
+        <p>I bring a calm, hygienic, and deeply personalized experience to every appointment — because beauty is as much about how you feel as how you look.</p>
+        <div class="skills-cloud" id="skillCloud"></div>
+      </div>
+      <div class="about-stats">
+        <div class="stat-item"><div class="stat-num">3+</div><div class="stat-label">Years of Practice</div></div>
+        <div class="stat-item"><div class="stat-num">150+</div><div class="stat-label">Bridal & Event Looks</div></div>
+        <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">Core Disciplines</div></div>
+        <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Languages — Hindi · English · Bengali</div></div>
+      </div>
     </div>
+  </div>
 </section>
 
+<div class="thin-divider"></div>
+
+<!-- IMAGE STRIPS -->
+<section class="strip-section" id="gallery">
+  <div class="strip-label reveal">
+    <p class="section-label">02 — Gallery</p>
+    <h2 class="section-title">The <em>Work</em></h2>
+  </div>
+  <div class="strip-track-wrapper"><div class="strip-track" id="stripA"></div></div>
+  <div class="strip-track-wrapper"><div class="strip-track reverse" id="stripB"></div></div>
+</section>
+
+<div class="thin-divider"></div>
+
+<!-- VIDEO CAROUSEL -->
+<section class="section" id="videos">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">03 — Films</p>
+      <h2 class="section-title">In <em>Motion</em></h2>
+    </div>
+    <div class="video-carousel reveal">
+      <div class="video-stage" id="videoStage"></div>
+      <button class="vid-arrow prev" id="vidPrev">&#8592;</button>
+      <button class="vid-arrow next" id="vidNext">&#8594;</button>
+      <div class="video-nav" id="videoDots"></div>
+    </div>
+  </div>
+</section>
+
+<div class="thin-divider"></div>
+
+<!-- EXPERIENCE -->
+<section class="section" id="experience">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">04 — Expertise</p>
+      <h2 class="section-title">What I <em>Do</em></h2>
+    </div>
+    <div class="exp-grid reveal" id="expGrid"></div>
+  </div>
+</section>
+
+<div class="thin-divider"></div>
+
+<!-- RESUME -->
+<section class="section" id="resume">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-label">05 — Résumé</p>
+      <h2 class="section-title">Creden<em>tials</em></h2>
+    </div>
+    <div class="resume-wrap reveal">
+      <iframe src="resume.pdf"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-    <p><b>© 2026 Sharmistha Mukhopadhyay | Portfolio | Enquire Now</b></p>
+  <div>
+    <div class="footer-logo">Sharmi<span>stha</span> Mukhopadhyay</div>
+    <div class="footer-info" style="margin-top:.75rem">Makeup · Hair · Skin · Saree Draping<br>VLCC Certified &nbsp;·&nbsp; Bangalore & Kolkata</div>
+  </div>
+  <div class="footer-info" style="text-align:center">© 2026 All rights reserved.<br>Media protected. Unauthorized reproduction prohibited.</div>
+  <a href="https://wa.me/9836462061" target="_blank" class="footer-wa">✦ &nbsp;Book Now</a>
 </footer>
 
-<!-- ===== POPUP ===== -->
-<div id="adPopup" class="popup">
-    <div class="popup-content">
-        <span class="close-btn" onclick="closePopup()">&times;</span>
-        <h2>✨ Shine at Your Next Event!</h2>
-        <p>
-            Makeup & styling for weddings, parties, and shoots.
-            <br><br>
-            <b>Limited slots available!</b>
-            <br>
-            Get <span class="highlight">30% OFF</span> Lowest ever on your first booking.
-        </p>
-        <button onclick="window.open('https://wa.me/9836462061', '_blank')">
-            Check Availability
-        </button>
-    </div>
+<!-- POPUP -->
+<div class="popup-bg" id="adPopup">
+  <div class="popup-box">
+    <span class="popup-close" onclick="closePopup()">✕</span>
+    <p class="popup-eyebrow">Limited Slots Available</p>
+    <h3 class="popup-title">Shine at Your<br>Next Event</h3>
+    <p class="popup-body">Bridal, party & shoot styling — personalized just for you.</p>
+    <div class="popup-discount">30%<small>off your first booking</small></div>
+    <button class="popup-btn" onclick="window.open('https://wa.me/9836462061','_blank')">Check Availability</button>
+  </div>
 </div>
 
 <script>
-
-// ============================================================
-//  MEDIA FILE LISTS
-// ============================================================
+/* ── DATA ─────────────────────────────────────── */
 const imageFiles = [
-    "IMG-20260207-WA0037.jpg",
-    "IMG-20260207-WA0039.jpg",
-    "IMG-20260207-WA0046.jpg",
-    "IMG-20260207-WA0047.jpg",
-    "IMG-20260207-WA0048.jpg",
-    "IMG-20260207-WA0049.jpg",
-    "IMG-20260207-WA0050.jpg",
-    "IMG-20260207-WA0051.jpg",
-    "IMG-20260207-WA0052.jpg",
-    "IMG-20260207-WA0053.jpg",
-    "IMG-20260207-WA0056.jpg",
-    "IMG-20260207-WA0061.jpg",
-    "IMG-20260207-WA0066.jpg",
-    "IMG-20260207-WA0067.jpg",
-    "IMG-20260207-WA0068.jpg",
-    "IMG-20260207-WA0069.jpg",
-    "IMG-20260207-WA0071.jpg"
+  "IMG-20260207-WA0037.jpg","IMG-20260207-WA0039.jpg","IMG-20260207-WA0046.jpg",
+  "IMG-20260207-WA0047.jpg","IMG-20260207-WA0048.jpg","IMG-20260207-WA0049.jpg",
+  "IMG-20260207-WA0050.jpg","IMG-20260207-WA0051.jpg","IMG-20260207-WA0052.jpg",
+  "IMG-20260207-WA0053.jpg","IMG-20260207-WA0056.jpg","IMG-20260207-WA0061.jpg",
+  "IMG-20260207-WA0066.jpg","IMG-20260207-WA0067.jpg","IMG-20260207-WA0068.jpg",
+  "IMG-20260207-WA0069.jpg","IMG-20260207-WA0071.jpg"
 ];
-
 const videoFiles = [
-    "VID-20260207-WA0054.mp4",
-    "VID-20260207-WA0060.mp4",
-    "VID-20260207-WA0062.mp4",
-    "VID-20260207-WA0064.mp4",
-    "VID-20260207-WA0065.mp4",
-    "VID-20260207-WA0070.mp4"
+  "VID-20260207-WA0054.mp4","VID-20260207-WA0060.mp4","VID-20260207-WA0062.mp4",
+  "VID-20260207-WA0064.mp4","VID-20260207-WA0065.mp4","VID-20260207-WA0070.mp4"
+];
+const skills = [
+  "Skin Analysis","Skin Cleansing","Exfoliation","Skin Massage","Face Mask",
+  "Threading & Waxing","Long-Wear Makeup","Party Glam","Bridal Makeup",
+  "Groom Makeup","Contouring","Acne Control","Face Cleanup",
+  "Hair Layering","Rebonding","Hair Colour","Damage Repair"
+];
+const expCards = [
+  { icon:"💍", title:"Bridal & Event", items:[
+    "Complete bridal makeup & wedding styling",
+    "Makeup for wedding guests & family",
+    "Day / Evening / Night party looks",
+    "Kids' fashion show & stage makeup"
+  ]},
+  { icon:"🥻", title:"Saree Draping", items:[
+    "Bengali bridal saree draping",
+    "All regional draping styles",
+    "Traditional bridal finishing"
+  ]},
+  { icon:"✂️", title:"Hair Styling", items:[
+    "Bridal & party hair styling",
+    "Cutting, coloring & creative foilage",
+    "Rebonding & smoothing treatments"
+  ]},
+  { icon:"🌿", title:"Salon Services", items:[
+    "Full body & specialized waxing",
+    "Threading — brows, lip, facial",
+    "Manicure & Pedicure"
+  ]}
 ];
 
-// ============================================================
-//  BUILD PROTECTED IMAGE GALLERY
-// ============================================================
-const imageGallery = document.getElementById("imageGallery");
-imageFiles.forEach(src => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "media-wrapper is-image";
-
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = "Portfolio image";
-    img.draggable = false;  // disable drag-to-save
-
-    // Transparent overlay blocks right-click context menu on image
-    const overlay = document.createElement("div");
-    overlay.className = "media-overlay";
-
-    // Block right-click on overlay
-    overlay.addEventListener("contextmenu", e => e.preventDefault());
-
-    wrapper.appendChild(img);
-    wrapper.appendChild(overlay);
-    imageGallery.appendChild(wrapper);
+/* ── SKILLS ───────────────────────────────────── */
+const cloud = document.getElementById("skillCloud");
+skills.forEach(s => {
+  const p = document.createElement("div");
+  p.className = "skill-pill"; p.textContent = s;
+  cloud.appendChild(p);
 });
 
-// ============================================================
-//  BUILD PROTECTED VIDEO GALLERY
-// ============================================================
-const videoGallery = document.getElementById("videoGallery");
-videoFiles.forEach(src => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "media-wrapper is-video";
-
-    const video = document.createElement("video");
-    video.src = src;
-    video.controls = true;
-    video.controlsList = "nodownload nofullscreen";   // remove download button
-    video.disablePictureInPicture = true;             // disable PiP
-    video.setAttribute("oncontextmenu", "return false;"); // no right-click
-
-    // Overlay only covers non-controls area (see CSS)
-    const overlay = document.createElement("div");
-    overlay.className = "media-overlay";
-    overlay.addEventListener("contextmenu", e => e.preventDefault());
-
-    wrapper.appendChild(video);
-    wrapper.appendChild(overlay);
-    videoGallery.appendChild(wrapper);
-});
-
-// ============================================================
-//  GLOBAL RIGHT-CLICK BLOCK
-// ============================================================
-document.addEventListener("contextmenu", e => {
-    // Block right-click everywhere on the page
-    e.preventDefault();
-    return false;
-});
-
-// ============================================================
-//  KEYBOARD SHORTCUT BLOCKING
-// ============================================================
-document.addEventListener("keydown", e => {
-    const key = e.key;
-    const ctrl = e.ctrlKey || e.metaKey;
-
-    // Block: PrintScreen
-    if (key === "PrintScreen") {
-        e.preventDefault();
-        navigator.clipboard?.writeText(""); // clear clipboard immediately
-        return false;
-    }
-
-    // Block: Ctrl/Cmd + S (save), Ctrl+U (view source),
-    //         Ctrl+Shift+I / F12 (DevTools), Ctrl+P (print/screenshot)
-    //         Ctrl+Shift+J (console), Ctrl+A (select all)
-    if (
-        ctrl && ["s", "S", "u", "U", "p", "P", "a", "A"].includes(key)
-    ) {
-        e.preventDefault();
-        return false;
-    }
-
-    if (
-        (ctrl && e.shiftKey && ["i", "I", "j", "J", "c", "C"].includes(key)) ||
-        key === "F12"
-    ) {
-        e.preventDefault();
-        return false;
-    }
-});
-
-// ============================================================
-//  DRAG BLOCK ON ALL IMAGES GLOBALLY
-// ============================================================
-document.addEventListener("dragstart", e => {
-    if (e.target.tagName === "IMG" || e.target.tagName === "VIDEO") {
-        e.preventDefault();
-    }
-});
-
-// ============================================================
-//  SCREENSHOT DETECTION (Page Visibility API)
-//  When user Alt+Tabs or the screen is captured on some devices,
-//  the page becomes "hidden" — we blur media while hidden.
-// ============================================================
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-        document.body.classList.add("screenshot-blur");
-    } else {
-        document.body.classList.remove("screenshot-blur");
-    }
-});
-
-// ============================================================
-//  POPUP
-// ============================================================
-setTimeout(() => {
-    document.getElementById("adPopup").style.display = "flex";
-}, 2000);
-
-function closePopup() {
-    document.getElementById("adPopup").style.display = "none";
+/* ── IMAGE STRIPS ─────────────────────────────── */
+function makeCard(src) {
+  const w = document.createElement("div"); w.className = "strip-card";
+  const ov = document.createElement("div"); ov.className = "card-overlay";
+  const img = document.createElement("img");
+  img.src = src; img.alt = ""; img.draggable = false;
+  img.addEventListener("contextmenu", e => e.preventDefault());
+  w.appendChild(img); w.appendChild(ov);
+  return w;
 }
+const trackA = document.getElementById("stripA");
+const trackB = document.getElementById("stripB");
+const half = Math.ceil(imageFiles.length / 2);
+const rowA = imageFiles.slice(0, half);
+const rowB = imageFiles.slice(half);
+[...rowA,...rowA,...rowA,...rowA].forEach(f => trackA.appendChild(makeCard(f)));
+[...rowB,...rowB,...rowB,...rowB].forEach(f => trackB.appendChild(makeCard(f)));
 
+/* ── VIDEO CAROUSEL ───────────────────────────── */
+const stage = document.getElementById("videoStage");
+const dotsEl = document.getElementById("videoDots");
+let currentVid = 0, vidTimer;
+
+videoFiles.forEach((src, i) => {
+  const slide = document.createElement("div");
+  slide.className = "video-slide" + (i===0?" active":"");
+  const vid = document.createElement("video");
+  vid.src = src; vid.controls = true;
+  vid.controlsList = "nodownload nofullscreen";
+  vid.disablePictureInPicture = true;
+  vid.setAttribute("oncontextmenu","return false;");
+  vid.muted = true;
+  if(i===0){ vid.autoplay=true; }
+  const topOv = document.createElement("div"); topOv.className = "vid-top-overlay";
+  topOv.addEventListener("contextmenu", e => e.preventDefault());
+  slide.appendChild(vid); slide.appendChild(topOv);
+  stage.appendChild(slide);
+
+  const dot = document.createElement("div");
+  dot.className = "vid-dot"+(i===0?" active":"");
+  dot.addEventListener("click", () => goVid(i));
+  dotsEl.appendChild(dot);
+});
+
+function goVid(idx) {
+  const slides = stage.querySelectorAll(".video-slide");
+  const dots   = dotsEl.querySelectorAll(".vid-dot");
+  slides[currentVid].querySelector("video").pause();
+  slides[currentVid].classList.remove("active");
+  dots[currentVid].classList.remove("active");
+  currentVid = (idx + videoFiles.length) % videoFiles.length;
+  slides[currentVid].classList.add("active");
+  dots[currentVid].classList.add("active");
+  const v = slides[currentVid].querySelector("video");
+  v.currentTime = 0; v.play().catch(()=>{});
+  resetVidTimer();
+}
+function resetVidTimer(){ clearInterval(vidTimer); vidTimer = setInterval(()=>goVid(currentVid+1),9000); }
+document.getElementById("vidPrev").addEventListener("click", ()=>goVid(currentVid-1));
+document.getElementById("vidNext").addEventListener("click", ()=>goVid(currentVid+1));
+resetVidTimer();
+
+/* ── EXPERIENCE ───────────────────────────────── */
+const expGrid = document.getElementById("expGrid");
+expCards.forEach(c => {
+  const card = document.createElement("div"); card.className = "exp-card";
+  card.innerHTML = `<div class="exp-icon">${c.icon}</div><div class="exp-title">${c.title}</div><ul class="exp-list">${c.items.map(i=>`<li>${i}</li>`).join("")}</ul>`;
+  expGrid.appendChild(card);
+});
+
+/* ── PARTICLES ────────────────────────────────── */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let W, H;
+function resizeCanvas(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resizeCanvas(); window.addEventListener("resize", resizeCanvas);
+const pts = Array.from({length:80},()=>({
+  x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight,
+  r: .5+Math.random()*1.8, vx:(Math.random()-.5)*.2, vy:-.05-Math.random()*.25,
+  a: .1+Math.random()*.45, da:(.002+Math.random()*.006)*(Math.random()>.5?1:-1)
+}));
+(function animPts(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.a+=p.da;
+    if(p.a<.05||p.a>.6) p.da*=-1;
+    if(p.y<-10) p.y=H+10;
+    if(p.x<-10) p.x=W+10; if(p.x>W+10) p.x=-10;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,149,108,${p.a})`; ctx.fill();
+  });
+  requestAnimationFrame(animPts);
+})();
+
+/* ── CURSOR ───────────────────────────────────── */
+const dot = document.getElementById("cursor-dot");
+const ring = document.getElementById("cursor-ring");
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;});
+(function animCursor(){
+  rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+  dot.style.left=mx+"px"; dot.style.top=my+"px";
+  ring.style.left=rx+"px"; ring.style.top=ry+"px";
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll("a,button,.vid-dot,.popup-close,.strip-card").forEach(el=>{
+  el.addEventListener("mouseenter",()=>{ring.style.width="60px";ring.style.height="60px";ring.style.borderColor="rgba(201,149,108,.9)";});
+  el.addEventListener("mouseleave",()=>{ring.style.width="36px";ring.style.height="36px";ring.style.borderColor="rgba(201,149,108,.5)";});
+});
+
+/* ── SCROLL REVEAL ────────────────────────────── */
+const revEls = document.querySelectorAll(".reveal");
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){e.target.classList.add("visible");obs.unobserve(e.target);}});
+},{threshold:.1});
+revEls.forEach(el=>obs.observe(el));
+
+/* ── PROTECTION ───────────────────────────────── */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("dragstart",e=>{ if(["IMG","VIDEO"].includes(e.target.tagName)) e.preventDefault(); });
+document.addEventListener("keydown",e=>{
+  const ctrl=e.ctrlKey||e.metaKey;
+  if(e.key==="PrintScreen"){e.preventDefault();navigator.clipboard?.writeText("");return false;}
+  if(ctrl&&["s","S","u","U","p","P","a","A"].includes(e.key)){e.preventDefault();return false;}
+  if((ctrl&&e.shiftKey&&["i","I","j","J","c","C"].includes(e.key))||e.key==="F12"){e.preventDefault();return false;}
+});
+document.addEventListener("visibilitychange",()=>{
+  document.body.style.filter = document.hidden ? "blur(20px) brightness(.15)" : "";
+});
+
+/* ── POPUP ────────────────────────────────────── */
+setTimeout(()=>{ document.getElementById("adPopup").style.display="flex"; },2500);
+function closePopup(){ document.getElementById("adPopup").style.display="none"; }
+document.getElementById("adPopup").addEventListener("click",e=>{
+  if(e.target===document.getElementById("adPopup")) closePopup();
+});
 </script>
 </body>
 </html>
